@@ -1,36 +1,43 @@
-import React, { useReducer, useState } from 'react';
-import ToDoList from './components/toDoList'
-import reducer, {initialState} from './reducers/reducer'
-import actions from './actions/actions'
-import './App.css';
+import React, { useReducer } from "react";
+
+import TodoForm from "./components/Form";
+import TodoList from "./components/toDoList";
+import "./App.css";
+
+import { initialState, reducer } from "./reducers/index";
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState)
-  const [toDoItem, setToDoItem] = useState('')
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const addToDo = (input) => {
+    const newToDo = {
+      todo: input,
+      completed: false,
+      id: new Date(),
+    };
+    dispatch({ type: "ADD_TODO", payload: newToDo });
+  };
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    dispatch(actions.newItem(toDoItem))
-  }
+  const handleComplete = (id) => {
+    dispatch({ type: "COMPLETED_TODO", payload: id });
+  };
 
-  const handleChanges = e => {
-    setToDoItem(e.target.value)
-    console.log(toDoItem);
-  }
+  const clearCompleted = () => {
+    dispatch({ type: "CLEAR_COMPLETED_TODO" });
+  };
 
   return (
     <div className="App">
-      <h1>To-Do List</h1>
-      <ToDoList state={state}/>
-      <form onSubmit={onSubmit}>
-        <input 
-          type='text' 
-          value={toDoItem}
-          onChange={handleChanges}
-        />
-        <button>Add New Task</button>
-      </form>
-      <button>Clear Completed</button>
+      <h1 style={{textDecoration: 'underline'}}>To Do List</h1>
+      <TodoList state={state} handleComplete={handleComplete} />
+      <TodoForm addTodo={addToDo} />
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          clearCompleted();
+        }}
+      >
+        Clear Task
+      </button>
     </div>
   );
 }

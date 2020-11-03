@@ -1,14 +1,18 @@
-import React from 'react'
+import React from "react";
+import Todo from "./toDo";
 
-const ToDoList = ({state}) => {
-  return state.toDoItems.map((item) => {
-    const newItem = Object.values(item);
-    return (
-      <div onClick={e => console.log(!newItem[1])} key={new Date()}>
-        <h3>{newItem[0]}</h3>
-      </div>
-    );
-  });
+export default function TodoList(props) {
+  return (
+    <div>
+      {props.state.map((item) => {
+        return (
+          <Todo
+            item={item}
+            key={item.id}
+            handleComplete={props.handleComplete}
+          />
+        );
+      })}
+    </div>
+  );
 }
-
-export default ToDoList;
